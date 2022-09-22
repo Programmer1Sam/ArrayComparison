@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <array>
 using namespace std;
 
 void compareRays(int* ray1, int* ray2);
@@ -13,14 +14,37 @@ void compareRays(int* ray1, int* ray2);
 * THE ORIGINAL AUTHOR OF CODE IN ORDER FOR IT TO BE USED IN PROGRAM
 */
 int main() {
-	int* ray1 = new int[2];
-	int* ray2 = new int[2];
-	compareRays(ray1, ray2);
+	int rayLength;
+	int tempNum; 
+
+	cout << "Enter max length for rays: ";
+	cin >> rayLength;
+
+	int* ray1 = new int[rayLength];
+	int* ray2 = new int[rayLength];
+	for (int i = 0; i < rayLength; i++) {
+		cout << "Array1 index " << i + 1 << ": ";
+		cin >> tempNum;
+		ray1[i] = tempNum;
+	}
+
+	for (int i = 0; i < rayLength; i++) {
+		cout << "Array2 index " << i + 1 << ": ";
+		cin >> tempNum;
+		ray2[i] = tempNum;
+	}
+	compareRays(ray1, ray2); 
 	return 0;
 }
 
+/*
+* Compares two arrays and considers if they can be related, for it to be related it must be at least
+* a 50% match to be considered related, if less it is considered not related. The data does not have to
+* be in the same index but it must be in both arrays
+*/ 
 void compareRays(int* ray1, int* ray2) {
 	int minToBeRelated = 0;
+	int matches = 0;
 	if (sizeof(ray1) != sizeof(ray2)) {
 		cout << "Arrays are not equal lengths, to compare lengths of arrays must be equal, goodbye." << endl;
 		return;
@@ -28,7 +52,21 @@ void compareRays(int* ray1, int* ray2) {
 	else
 	{
 		// gets data in bytes to convert from bytes to integers specifically divide by 4
-		minToBeRelated = (sizeof(ray1) / 2) / 4 + 1;
+		minToBeRelated = (sizeof(ray1) / 2) / 4;
 	}
-	cout << minToBeRelated << endl;
+
+	for (int i = 0; i < sizeof(ray1) / 4; i++) {
+		for (int j = 0; j < sizeof(ray2) / 4; j++) {
+			if (ray1[i] == ray2[j]) {
+				matches++;
+			}
+		}
+	}
+
+	if (matches >= minToBeRelated) {
+		cout << "The two arrays contain enough similarities to be related." << endl;
+	}
+	else {
+		cout << "Not enough similarities for the two arrays to be considered related." << endl;
+	}
 }
